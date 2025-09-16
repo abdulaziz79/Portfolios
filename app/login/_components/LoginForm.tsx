@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -39,7 +39,7 @@ export default function LoginForm() {
         throw new Error("Please enter a valid email address");
       }
 
-      console.log("🔑 Attempting login...");
+      console.log("🔑 Attempting login...", formData.email);
 
       // Sign in with email and password
       const { data, error: signInError } =
@@ -51,20 +51,23 @@ export default function LoginForm() {
       console.log("📩 Login response:", { data, error: signInError });
 
       if (signInError) {
+        console.error("❌ Supabase auth error:", signInError);
         throw new Error(signInError.message);
       }
 
       if (data.user) {
-        console.log("✅ Login successful!");
+        console.log("✅ Login successful!", data.user);
 
-        // Redirect to dashboard or home page
-        router.push("/");
-        router.refresh(); // Refresh the page to update auth state
+        // Force a hard redirect to ensure navigation works
+        window.location.href = "/";
+
+        // Alternatively, use router with refresh
+        // router.refresh();
+        // router.push("/");
       }
     } catch (err: any) {
       console.error("❌ Login error:", err);
       setError(err.message || "An error occurred during login");
-    } finally {
       setLoading(false);
     }
   };
