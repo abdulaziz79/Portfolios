@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model User {
+  id           Int        @id @default(autoincrement())
+  email        String     @unique
+  status       Boolean    @default(true)
+  name         String?
+  templateIds  Int[]
+  templates    Template[]
+  portfolios   Portfolio[]
+  createdAt    DateTime   @default(now())
+  supabaseUid  String?    @unique
+  avatarUrl    String?
+  role         Role       @default(USER)
+  updatedAt    DateTime   @updatedAt
+}
+
+model Template {
+  id          Int        @id @default(autoincrement())
+  name        String
+  content     String
+  userId      Int
+  user        User       @relation(fields: [userId], references: [id])
+  portfolios  Portfolio[]
+  createdAt   DateTime   @default(now())
+}
+
+model Portfolio {
+  id           String     @id @default(cuid())
+  userId       Int
+  templateId   Int
+  user         User       @relation(fields: [userId], references: [id])
+  template     Template   @relation(fields: [templateId], references: [id])
+  name         String
+  title        String?
+  about        String?
+  profileImage String?
+  
+  // Relations
+  skills       Skill[]
+  experiences  Experience[]
+  projects     Project[]
+  contactInfo  ContactInfo?
+  menuItems    MenuItem[]
+  restaurantInfo RestaurantInfo?
+  
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  
+  @@unique([userId, templateId])
+}
+
+model Skill {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  name        String
+  createdAt   DateTime  @default(now())
+}
+
+model Experience {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  company     String
+  position    String
+  duration    String?
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Project {
+  id           String    @id @default(cuid())
+  portfolioId  String
+  portfolio    Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  technologies String[]
+  image        String?
+  liveUrl      String?
+  githubUrl    String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model ContactInfo {
+  id          String    @id @default(cuid())
+  portfolioId String    @unique
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  email       String?
+  phone       String?
+  location    String?
+  github      String?
+  linkedin    String?
+  instagram   String?
+  website     String?
+  twitter     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model MenuItem {
+  id          String    @id @default(cuid())
+  portfolioId String
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  category    String
+  name        String
+  description String?
+  price       String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model RestaurantInfo {
+  id          String    @id @default(cuid())
+  portfolioId String    @unique
+  portfolio   Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
+  hours       String?
+  cuisine     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}

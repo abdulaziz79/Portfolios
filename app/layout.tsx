@@ -1,27 +1,18 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { GeistSans } from "geist/font/sans";
+import { GeistMono } from "geist/font/mono";
+import { Analytics } from "@vercel/analytics/next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Suspense } from "react";
+import { UserProvider } from "@/context/UserContext";
 import "./globals.css";
-import { Toaster } from "sonner";
-
-const inter = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-inter",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-space-grotesk",
-});
 
 export const metadata: Metadata = {
-  title: "Portfolio - Full Stack Developer",
+  title: "PortfolioForge - Create Your Stunning Portfolio in Minutes",
   description:
-    "Modern futuristic portfolio showcasing full stack development skills",
-  generator: "v0.app",
+    "Build professional portfolio websites with modern templates and futuristic design",
+  generator: "portfolio.app",
 };
 
 export default function RootLayout({
@@ -32,17 +23,22 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased`}
+        className={`font-sans ${GeistSans.variable} ${GeistMono.variable} theme-transition`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          {children}
-          <Toaster richColors position="bottom-right" />
-        </ThemeProvider>
+        <UserProvider>
+          {/* <AuthLoader /> */}
+          <Suspense fallback={null}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange={false}
+            >
+              {children}
+            </ThemeProvider>
+          </Suspense>
+          <Analytics />
+        </UserProvider>
       </body>
     </html>
   );
