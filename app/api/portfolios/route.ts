@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       where: {
         userId_templateId: {
           userId: user.id,
-          templateId: parseInt(templateId),
+          templateId: templateId,
         },
       },
     });
@@ -47,11 +47,7 @@ export async function POST(request: NextRequest) {
       portfolio = await updatePortfolio(existingPortfolio.id, portfolioData);
     } else {
       // Create new portfolio
-      portfolio = await createPortfolio(
-        user.id,
-        parseInt(templateId),
-        portfolioData
-      );
+      portfolio = await createPortfolio(user.id, templateId, portfolioData);
     }
 
     return NextResponse.json({ success: true, portfolio });
@@ -65,7 +61,26 @@ export async function POST(request: NextRequest) {
 }
 
 // Helper function to create a new portfolio
-async function createPortfolio(userId: number, templateId: number, data: any) {
+// Helper function to create a new portfolio
+async function createPortfolio(userId: number, templateId: string, data: any) {
+  // First, check if the template exists, create it if it doesn't
+  let template = await prisma.template.findUnique({
+    where: { id: templateId },
+  });
+
+  if (!template) {
+    // Create the template if it doesn't exist
+    template = await prisma.template.create({
+      data: {
+        id: templateId,
+        name: `${templateId} Template`,
+        content: "{}", // Default empty content
+        userId: userId,
+      },
+    });
+    console.log(`Created new template: ${templateId}`);
+  }
+
   return await prisma.portfolio.create({
     data: {
       userId,
@@ -75,7 +90,7 @@ async function createPortfolio(userId: number, templateId: number, data: any) {
       about: data.about,
       profileImage: data.profileImage,
 
-      // Create related data
+      // Create related data - FIXED: Use the correct data structure from your request
       skills: {
         create: data.skills?.map((skill: string) => ({
           name: skill,
@@ -101,13 +116,15 @@ async function createPortfolio(userId: number, templateId: number, data: any) {
       },
       contactInfo: {
         create: {
-          email: data.contact?.email,
-          phone: data.contact?.phone,
-          location: data.contact?.location,
-          github: data.contact?.github,
-          linkedin: data.contact?.linkedin,
-          instagram: data.contact?.instagram,
-          website: data.contact?.website,
+          // Use the correct field names from your request data
+          email: data.email, // Changed from data.contact?.email
+          phone: data.phone, // Changed from data.contact?.phone
+          location: data.location, // Changed from data.contact?.location
+          github: data.socialLinks?.github,
+          linkedin: data.socialLinks?.linkedin,
+          instagram: data.socialLinks?.instagram,
+          website: data.socialLinks?.website,
+          twitter: data.socialLinks?.twitter,
         },
       },
       menuItems: {
@@ -138,6 +155,7 @@ async function createPortfolio(userId: number, templateId: number, data: any) {
   });
 }
 
+// Helper function to update an existing portfolio
 // Helper function to update an existing portfolio
 async function updatePortfolio(portfolioId: string, data: any) {
   // First, delete all related data to avoid duplicates
@@ -183,13 +201,15 @@ async function updatePortfolio(portfolioId: string, data: any) {
       },
       contactInfo: {
         update: {
-          email: data.contact?.email,
-          phone: data.contact?.phone,
-          location: data.contact?.location,
-          github: data.contact?.github,
-          linkedin: data.contact?.linkedin,
-          instagram: data.contact?.instagram,
-          website: data.contact?.website,
+          // Use the correct field names from your request data
+          email: data.email, // Changed from data.contact?.email
+          phone: data.phone, // Changed from data.contact?.phone
+          location: data.location, // Changed from data.contact?.location
+          github: data.socialLinks?.github,
+          linkedin: data.socialLinks?.linkedin,
+          instagram: data.socialLinks?.instagram,
+          website: data.socialLinks?.website,
+          twitter: data.socialLinks?.twitter,
         },
       },
       menuItems: {

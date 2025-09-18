@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -23,6 +24,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { User } from "@prisma/client";
 
 interface MenuItem {
   id: string;
@@ -70,6 +72,11 @@ interface PortfolioData {
     address: string;
     menu: MenuItem[];
   };
+}
+
+interface Props {
+  user: User | null;
+  templateId: string;
 }
 
 const getDummyData = (templateId: string): PortfolioData => {
@@ -329,9 +336,8 @@ const getDummyData = (templateId: string): PortfolioData => {
   };
 };
 
-export default function CustomizePage() {
-  const params = useParams();
-  const templateId = params.templateId as string;
+export default function CustomizePage({ user, templateId }: Props) {
+  console.log("User data:", user);
   const [portfolioData, setPortfolioData] = useState<PortfolioData>(() =>
     getDummyData(templateId)
   );
@@ -500,22 +506,58 @@ export default function CustomizePage() {
 
   const generatePortfolio = async () => {
     setIsGenerating(true);
-    // Simulate portfolio generation
-    await new Promise((resolve) => setTimeout(resolve, 2000));
 
-    const username = portfolioData.name
-      .toLowerCase()
-      .replace(/\s+/g, "-")
-      .replace(/[^a-z0-9-]/g, "");
+    try {
+      // Save to database first
+      const response = await fetch("/api/portfolios", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          templateId,
+          portfolioData,
+          userEmail: user?.email || null,
+        }),
+      });
 
-    localStorage.setItem(
-      `portfolio-${username}-${templateId}`,
-      JSON.stringify(portfolioData)
-    );
+      if (!response.ok) {
+        throw new Error("Failed to save to database");
+      }
 
-    const portfolioUrl = `/portfolio/${username}/${templateId}`;
-    window.location.href = portfolioUrl;
-    setIsGenerating(false);
+      // Also save to localStorage as backup/cache
+      const username = portfolioData.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+
+      localStorage.setItem(
+        `portfolio-${username}-${templateId}`,
+        JSON.stringify(portfolioData)
+      );
+
+      // Redirect to portfolio page
+      const portfolioUrl = `/portfolio/${username}/${templateId}`;
+      window.location.href = portfolioUrl;
+    } catch (error) {
+      console.error("Error saving portfolio:", error);
+
+      // Fallback: just use localStorage if database fails
+      const username = portfolioData.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
+
+      localStorage.setItem(
+        `portfolio-${username}-${templateId}`,
+        JSON.stringify(portfolioData)
+      );
+
+      const portfolioUrl = `/portfolio/${username}/${templateId}`;
+      window.location.href = portfolioUrl;
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   const renderBasicInfo = () => (

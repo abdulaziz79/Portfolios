@@ -6,14 +6,15 @@ export async function GET(
   { params }: { params: { username: string; templateId: string } }
 ) {
   try {
-    const { username, templateId } = params;
+    const { username, templateId } = await params;
+    console.log("Fetching portfolio for:", username, templateId);
 
     const portfolio = await prisma.portfolio.findFirst({
       where: {
         user: {
           name: username,
         },
-        templateId: parseInt(templateId),
+        templateId: templateId,
       },
       include: {
         skills: true,
