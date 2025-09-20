@@ -57,17 +57,12 @@ export default function LoginForm() {
 
       if (data.user) {
         console.log("✅ Login successful!", data.user);
-
-        // Force a hard redirect to ensure navigation works
-        window.location.href = "/";
-
-        // Alternatively, use router with refresh
-        // router.refresh();
-        // router.push("/");
+        router.push("/");
       }
     } catch (err: any) {
       console.error("❌ Login error:", err);
       setError(err.message || "An error occurred during login");
+    } finally {
       setLoading(false);
     }
   };
@@ -95,6 +90,7 @@ export default function LoginForm() {
     } catch (err: any) {
       console.error(`❌ ${provider} login error:`, err);
       setError(err.message || `Failed to sign in with ${provider}`);
+    } finally {
       setLoading(false);
     }
   };

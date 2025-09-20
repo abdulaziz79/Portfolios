@@ -89,7 +89,7 @@ export function HeroSection() {
               </Button>
             </Link>
 
-            <Link href="/resume">
+            <Link href="/resume" prefetch>
               <Button
                 variant="outline"
                 size="lg"

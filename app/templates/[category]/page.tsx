@@ -216,7 +216,7 @@ export default function TemplateGalleryPage() {
           <Link href="/categories">
             <Button
               variant="ghost"
-              className="mb-6 glass-effect hover:scale-105 transition-all duration-300"
+              className="mb-6 glass-effect hover:scale-105 transition-all duration-300 cursor-pointer"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Categories

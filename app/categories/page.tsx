@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
+import { motion } from "framer-motion";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   ArrowLeft,
   Code,
@@ -17,8 +17,8 @@ import {
   Megaphone,
   ChefHat,
   Stethoscope,
-} from "lucide-react"
-import Link from "next/link"
+} from "lucide-react";
+import Link from "next/link";
 
 const categories = [
   {
@@ -129,7 +129,7 @@ const categories = [
     templateCount: 6,
     popular: true,
   },
-]
+];
 
 export default function CategoriesPage() {
   return (
@@ -142,8 +142,11 @@ export default function CategoriesPage() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <Link href="/">
-            <Button variant="ghost" className="mb-6 glass-effect hover:scale-105 transition-all duration-300">
+          <Link href="/" prefetch>
+            <Button
+              variant="ghost"
+              className="mb-6 glass-effect hover:scale-105 transition-all duration-300 cursor-pointer"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -157,8 +160,8 @@ export default function CategoriesPage() {
               </span>
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto text-pretty leading-relaxed">
-              Select your profession to see templates designed specifically for your industry and showcase your work
-              perfectly.
+              Select your profession to see templates designed specifically for
+              your industry and showcase your work perfectly.
             </p>
           </div>
         </motion.div>
@@ -166,7 +169,7 @@ export default function CategoriesPage() {
         {/* Categories Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {categories.map((category, index) => {
-            const IconComponent = category.icon
+            const IconComponent = category.icon;
             return (
               <motion.div
                 key={category.id}
@@ -200,11 +203,15 @@ export default function CategoriesPage() {
                       <h3 className="text-xl font-semibold mb-2 group-hover:text-accent transition-colors duration-300">
                         {category.name}
                       </h3>
-                      <p className="text-muted-foreground text-sm mb-4 leading-relaxed">{category.description}</p>
+                      <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
+                        {category.description}
+                      </p>
 
                       {/* Template count */}
                       <div className="flex items-center justify-between">
-                        <span className="text-xs text-muted-foreground">{category.templateCount} templates</span>
+                        <span className="text-xs text-muted-foreground">
+                          {category.templateCount} templates
+                        </span>
                         <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-300">
                           <ArrowLeft className="w-3 h-3 rotate-180" />
                         </div>
@@ -218,7 +225,7 @@ export default function CategoriesPage() {
                   </Card>
                 </Link>
               </motion.div>
-            )
+            );
           })}
         </div>
 
@@ -232,11 +239,14 @@ export default function CategoriesPage() {
           <p className="text-muted-foreground mb-6">
             Don't see your profession? We're constantly adding new categories.
           </p>
-          <Button variant="outline" className="glass-effect hover:scale-105 transition-all duration-300 bg-transparent">
+          <Button
+            variant="outline"
+            className="glass-effect hover:scale-105 transition-all duration-300 bg-transparent cursor-pointer"
+          >
             Request New Category
           </Button>
         </motion.div>
       </div>
     </main>
-  )
+  );
 }

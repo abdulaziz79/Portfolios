@@ -1,23 +1,33 @@
-"use client"
+"use client";
 
-import { motion } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Palette, Layers, Sparkles, Brush, Monitor, Smartphone } from "lucide-react"
-import Link from "next/link"
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  ArrowLeft,
+  Palette,
+  Layers,
+  Sparkles,
+  Brush,
+  Monitor,
+  Smartphone,
+} from "lucide-react";
+import Link from "next/link";
 
 export default function DesignerPage() {
   const features = [
     {
       icon: <Palette className="w-6 h-6" />,
       title: "Creative Showcase",
-      description: "Display your design process, concepts, and final creations beautifully",
+      description:
+        "Display your design process, concepts, and final creations beautifully",
     },
     {
       icon: <Layers className="w-6 h-6" />,
       title: "Multi-Format Support",
-      description: "Showcase graphics, UI/UX designs, branding, and digital art",
+      description:
+        "Showcase graphics, UI/UX designs, branding, and digital art",
     },
     {
       icon: <Sparkles className="w-6 h-6" />,
@@ -32,14 +42,16 @@ export default function DesignerPage() {
     {
       icon: <Monitor className="w-6 h-6" />,
       title: "Case Studies",
-      description: "Tell the story behind your designs with detailed project breakdowns",
+      description:
+        "Tell the story behind your designs with detailed project breakdowns",
     },
     {
       icon: <Smartphone className="w-6 h-6" />,
       title: "Mobile Optimized",
-      description: "Perfect viewing experience across all devices and screen sizes",
+      description:
+        "Perfect viewing experience across all devices and screen sizes",
     },
-  ]
+  ];
 
   const designTypes = [
     "UI/UX Design",
@@ -58,7 +70,7 @@ export default function DesignerPage() {
     "Marketing Materials",
     "Editorial Design",
     "3D Design",
-  ]
+  ];
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-purple-900/20 via-pink-900/20 to-indigo-900/20">
@@ -70,8 +82,11 @@ export default function DesignerPage() {
           transition={{ duration: 0.6 }}
           className="mb-12"
         >
-          <Link href="/categories">
-            <Button variant="ghost" className="mb-6 glass-effect hover:scale-105 transition-all duration-300">
+          <Link href="/categories" prefetch>
+            <Button
+              variant="ghost"
+              className="mb-6 glass-effect hover:scale-105 transition-all duration-300 cursor-pointer"
+            >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Categories
             </Button>
@@ -96,12 +111,16 @@ export default function DesignerPage() {
             </h1>
 
             <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto text-pretty leading-relaxed">
-              Build a stunning design portfolio that showcases your creativity, process, and professional work. Perfect
-              for UI/UX designers, graphic designers, and creative professionals.
+              Build a stunning design portfolio that showcases your creativity,
+              process, and professional work. Perfect for UI/UX designers,
+              graphic designers, and creative professionals.
             </p>
 
             <Link href="/templates/designer">
-              <Button size="lg" className="animate-glow hover:scale-105 transition-all duration-300 px-8 py-6 text-lg">
+              <Button
+                size="lg"
+                className="animate-glow hover:scale-105 transition-all duration-300 px-8 py-6 text-lg"
+              >
                 <Brush className="w-5 h-5 mr-2" />
                 Choose Template
               </Button>
@@ -125,10 +144,14 @@ export default function DesignerPage() {
             >
               <Card className="p-6 glass-effect hover:scale-105 transition-all duration-300 border-purple-500/20">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400">{feature.icon}</div>
+                  <div className="p-2 rounded-lg bg-purple-500/20 text-purple-400">
+                    {feature.icon}
+                  </div>
                   <h3 className="font-semibold">{feature.title}</h3>
                 </div>
-                <p className="text-muted-foreground text-sm">{feature.description}</p>
+                <p className="text-muted-foreground text-sm">
+                  {feature.description}
+                </p>
               </Card>
             </motion.div>
           ))}
@@ -141,7 +164,9 @@ export default function DesignerPage() {
           transition={{ delay: 0.8, duration: 0.8 }}
           className="text-center"
         >
-          <h2 className="text-2xl font-bold mb-6">Perfect for All Design Disciplines</h2>
+          <h2 className="text-2xl font-bold mb-6">
+            Perfect for All Design Disciplines
+          </h2>
           <div className="flex flex-wrap justify-center gap-3 max-w-4xl mx-auto">
             {designTypes.map((type, index) => (
               <motion.div
@@ -162,5 +187,5 @@ export default function DesignerPage() {
         </motion.div>
       </div>
     </main>
-  )
+  );
 }
